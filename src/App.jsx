@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -26,10 +27,10 @@ const App = () => {
     }
   }, [])
   
-  const showError = error => {
-    setErrorMessage(error.message)
+  const showMessage = message => {
+    setMessage(message)
     setTimeout(() => {
-      setErrorMessage(null)
+      setMessage(null)
     }, 5000)
   }
 
@@ -44,8 +45,12 @@ const App = () => {
       setUsername('')
       setPassword('')
 
+      const message = `User ${user.name} logged in`
+      showMessage({ message: message, error: false })
+
     } catch (error) {
-      showError(error)
+      const message = error.response.data.error || error.message
+      showMessage({ message, error: true })
     }
   }
 
@@ -53,6 +58,9 @@ const App = () => {
     window.localStorage.removeItem('user')
     blogService.setToken(null)
     setUser(null)
+
+    const message = `User ${user.name} logged out`
+    showMessage({ message: message, error: false })
   }
 
   const handleCreateBlog = async event => {
@@ -65,14 +73,19 @@ const App = () => {
       setAuthor('')
       setUrl('')
 
+      const message = `a new blog ${blog.title} by ${blog.author} added`
+      showMessage({ message: message, error: false })
+
     } catch (error) {
-      showError(error)
+      const message = error.response.data.error || error.message
+      showMessage({ message, error: true })
     }
   }
 
   const loginForm = () => (
     <div>
       <h2>Login</h2>
+      <Notification message={message} />
       <form onSubmit={handleLogin}>
         <div>
           <label htmlFor="username">Username:&nbsp;
@@ -150,6 +163,7 @@ const App = () => {
         : (
           <div>
             <h2>Blogs</h2>
+            <Notification message={message} />
             <div>{user.name} logged-in&nbsp;
               <input 
                 type="button"
