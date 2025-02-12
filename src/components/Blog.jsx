@@ -35,12 +35,12 @@ const Blog = ({ blog, updateBlog }) => {
   
   return (
     <div style={style}>
-      <div>{blog.title}&nbsp;{toggleView()}
+      <div>{blog.title}, {blog.author}&nbsp;{toggleView()}
       </div>
       <div style={{ display: viewDetails ? '' : 'none' }}>
         <div>{blog.url}</div>
         <div>Likes {blog.likes}&nbsp;{likeBtn()}</div>
-        <div>{blog.author}</div>
+        <div>{blog.user.name}</div>
       </div>
     </div>  
 )}
