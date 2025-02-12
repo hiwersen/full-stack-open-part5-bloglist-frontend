@@ -22,9 +22,11 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    const user = window.localStorage.getItem('user')
+    let user = window.localStorage.getItem('user')
     if (user) {
-      setUser(JSON.parse(user))
+      user = JSON.parse(user)
+      setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
   
@@ -103,11 +105,27 @@ const App = () => {
       setBlogs(blogs.concat(blog))
       toggleBlogFormRef.current.toggleVisibility()
 
-      const message = `a new blog ${blog.title} by ${blog.author} added`
+      const message = `a new blog "${blog.title}" by ${blog.author} added`
       showMessage({ message: message, error: false })
 
     } catch (error) {
       const message = error.response?.data?.error || 'error creating new blog'
+      showMessage({ message, error: true })
+      console.error(error.message)
+    }
+  }
+
+  const updateBlog = async (blogToUpdate, id) => {
+
+    try {
+      const blog = await blogService.update(blogToUpdate, id)
+      setBlogs(blogs.map(b => b.id === blog.id ? blog : b))
+
+      const message = `"${blog.title}" has been updated`
+      showMessage({ message: message, error: false })
+      
+    } catch (error) {
+      const message = error.response?.data?.error || 'error updating blog'
       showMessage({ message, error: true })
       console.error(error.message)
     }
@@ -141,7 +159,11 @@ const App = () => {
             <br />
             <div>
               {blogs.map(blog =>
-                <Blog key={blog.id} blog={blog} />
+                <Blog 
+                key={blog.id} 
+                blog={blog} 
+                updateBlog={updateBlog} 
+                />
               )}
             </div>
           </div>

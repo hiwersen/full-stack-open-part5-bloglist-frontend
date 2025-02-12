@@ -1,12 +1,15 @@
 import { useState } from 'react'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, updateBlog }) => {
   const [viewDetails, setViewDetails] = useState(false)
 
   const style = {
     padding: 12,
     border: 'solid 1px gray',
-    marginBottom: 8
+    borderRadius: 4,
+    marginBottom: 8,
+    maxWidth: 520,
+    minWidth: 360
   }
 
   const toggleView = () => (
@@ -17,13 +20,18 @@ const Blog = ({ blog }) => {
     />
   )
 
-  const like = () => (
-    <input 
-    type="button" 
-    value="Like" 
-    onClick={() => console.log('Liked!')} 
-    />
-  )
+  const likeBtn = () => {
+    const likes = Number(blog.likes || 0)
+    const id = blog.id
+
+    return (
+      <input 
+      type="button" 
+      value="Like" 
+      onClick={() => updateBlog({ likes: likes + 1 }, id)} 
+      />
+    )
+  }
   
   return (
     <div style={style}>
@@ -31,7 +39,7 @@ const Blog = ({ blog }) => {
       </div>
       <div style={{ display: viewDetails ? '' : 'none' }}>
         <div>{blog.url}</div>
-        <div>Likes {blog.likes}&nbsp;{like()}</div>
+        <div>Likes {blog.likes}&nbsp;{likeBtn()}</div>
         <div>{blog.author}</div>
       </div>
     </div>  
