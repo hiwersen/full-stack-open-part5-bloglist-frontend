@@ -17,7 +17,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
-      setBlogs( blogs )
+      setBlogs(blogs.sort((a, b) => b.likes - a.likes))
       console.log(blogs)
     })  
   }, [])
@@ -103,7 +103,7 @@ const App = () => {
 
     try {
       const blog = await blogService.create(blogToCreate)
-      setBlogs(blogs.concat(blog))
+      setBlogs(blogs.concat(blog).sort((a, b) => b.likes - a.likes))
       toggleBlogFormRef.current.toggleVisibility()
 
       const message = `a new blog "${blog.title}" by ${blog.author} added`
@@ -120,7 +120,7 @@ const App = () => {
 
     try {
       const blog = await blogService.update(blogToUpdate, id)
-      setBlogs(blogs.map(b => b.id === blog.id ? blog : b))
+      setBlogs(blogs.map(b => b.id === blog.id ? blog : b).sort((a, b) => b.likes - a.likes))
 
       const message = `"${blog.title}" has been updated`
       showMessage({ message: message, error: false })
