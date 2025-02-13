@@ -18,7 +18,6 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs => {
       setBlogs(blogs.sort((a, b) => b.likes - a.likes))
-      console.log(blogs)
     })  
   }, [])
 
@@ -126,7 +125,32 @@ const App = () => {
       showMessage({ message: message, error: false })
       
     } catch (error) {
-      const message = error.response?.data?.error || 'error updating blog'
+      const message = error.response?.data?.error || `error updating blog`
+      showMessage({ message, error: true })
+      console.error(error.message)
+    }
+  }
+
+  const deleteBlog = async blog => {
+    const ok = window.confirm(`Delete blog "${blog.title}" by ${blog.author}?`)
+    if (!ok) return
+
+    try {
+      const response = await blogService.delete(blog.id)
+      
+      if (response.status !== 204) {
+        const message = `failed to delete blog: "${blog.title}"`
+        showMessage({ message, error: true })
+        return
+      } 
+
+      setBlogs(blogs.filter(b => b.id !== blog.id).sort((a, b) => b.likes - a.likes))
+
+      const message = `blog "${blog.title}" has been deleted`
+      showMessage({ message: message, error: false })
+      
+    } catch (error) {
+      const message = error.response?.data?.error || `error deleting blog: "${blog.title}"`
       showMessage({ message, error: true })
       console.error(error.message)
     }
@@ -163,7 +187,9 @@ const App = () => {
                 <Blog 
                 key={blog.id} 
                 blog={blog} 
-                updateBlog={updateBlog} 
+                updateBlog={updateBlog}
+                deleteBlog={deleteBlog}
+                user={user}
                 />
               )}
             </div>

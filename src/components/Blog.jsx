@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
   const [viewDetails, setViewDetails] = useState(false)
 
   const style = {
@@ -25,10 +25,27 @@ const Blog = ({ blog, updateBlog }) => {
     const id = blog.id
 
     return (
-      <input 
+      <input
       type="button" 
       value="Like" 
       onClick={() => updateBlog({ likes: likes + 1 }, id)} 
+      />
+    )
+  }
+
+  const deleteBtn = () => {
+    const style = {
+      display: blog.user.username === user.username ? '' : 'none',
+      border: '0.5px solid lightGray',
+      borderRadius: 4
+    }
+
+    return (
+      <input
+      style={style}
+      type="button"
+      value="Delete" 
+      onClick={() => deleteBlog(blog)} 
       />
     )
   }
@@ -41,6 +58,7 @@ const Blog = ({ blog, updateBlog }) => {
         <div>{blog.url}</div>
         <div>Likes {blog.likes}&nbsp;{likeBtn()}</div>
         <div>{blog.user.name}</div>
+        <div>{deleteBtn()}</div>
       </div>
     </div>  
 )}
