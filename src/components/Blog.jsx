@@ -1,22 +1,23 @@
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
   const [viewDetails, setViewDetails] = useState(false)
 
   const style = {
-    padding: 12,
-    border: 'solid 1px gray',
+    padding: 8,
+    paddingTop: 16,
+    border: 'solid 1px lightgray',
     borderRadius: 4,
-    marginBottom: 8,
-    maxWidth: 520,
-    minWidth: 360
+    marginBottom: 12,
+    minWidth: 320
   }
 
   const toggleView = () => (
-    <input 
-    type="button" 
-    value={viewDetails ? "hide" : "view" } 
-    onClick={() => setViewDetails(!viewDetails)} 
+    <input
+      type="button"
+      value={viewDetails ? 'hide' : 'view' }
+      onClick={() => setViewDetails(!viewDetails)}
     />
   )
 
@@ -26,9 +27,9 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
 
     return (
       <input
-      type="button" 
-      value="Like" 
-      onClick={() => updateBlog({ likes: likes + 1 }, id)} 
+        type="button"
+        value="Like"
+        onClick={() => updateBlog({ likes: likes + 1 }, id)}
       />
     )
   }
@@ -42,14 +43,14 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
 
     return (
       <input
-      style={style}
-      type="button"
-      value="Delete" 
-      onClick={() => deleteBlog(blog)} 
+        style={style}
+        type="button"
+        value="Delete"
+        onClick={() => deleteBlog(blog)}
       />
     )
   }
-  
+
   return (
     <div style={style}>
       <div>{blog.title}, {blog.author}&nbsp;{toggleView()}
@@ -60,7 +61,14 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
         <div>{blog.user.name}</div>
         <div>{deleteBtn()}</div>
       </div>
-    </div>  
-)}
+    </div>
+  )}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  updateBlog: PropTypes.func.isRequired,
+  deleteBlog: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired
+}
 
 export default Blog

@@ -3,14 +3,13 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
 import ToggleVisibility from './components/ToggleVisibility'
 import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [message, setMessage] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   const toggleBlogFormRef = useRef()
@@ -18,7 +17,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs => {
       setBlogs(blogs.sort((a, b) => b.likes - a.likes))
-    })  
+    })
   }, [])
 
   useEffect(() => {
@@ -29,7 +28,7 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-  
+
   const showMessage = message => {
     setMessage(message)
     setTimeout(() => {
@@ -37,19 +36,16 @@ const App = () => {
     }, 5000)
   }
 
-  const handleLogin = async event => {
-    event.preventDefault()
+  const login = async userToLogin => {
 
     try {
-      const user = await loginService.login({ username, password })
+      const user = await loginService.login(userToLogin)
       window.localStorage.setItem('user', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
 
-      const message = `User ${user.name} logged in`
-      showMessage({ message: message, error: false })
+      // const message = `User ${user.name} logged in`
+      // showMessage({ message: message, error: false })
 
     } catch (error) {
       const message = error.response.data.error || error.message
@@ -62,41 +58,9 @@ const App = () => {
     blogService.setToken(null)
     setUser(null)
 
-    const message = `User ${user.name} logged out`
-    showMessage({ message: message, error: false })
+    // const message = `User ${user.name} logged out`
+    // showMessage({ message: message, error: false })
   }
-
-  const loginForm = () => (
-    <div>
-      <h2>Login</h2>
-      <Notification message={message} />
-      <form onSubmit={handleLogin}>
-        <div>
-          <label htmlFor="username">Username:&nbsp;
-            <input
-              id="username"
-              name="username"
-              type="text"
-              value={username}
-              onChange={({ target: { value } }) => setUsername(value)}
-            />
-          </label>
-        </div>
-        <div>
-          <label htmlFor="password">Password:&nbsp;
-            <input
-              id="password"
-              name="password"
-              type="password"
-              value={password}
-              onChange={({ target: { value } }) => setPassword(value)}
-            />
-          </label>
-        </div>
-        <button type="submit">Log In</button>
-      </form>
-    </div>
-  )
 
   const createBlog = async blogToCreate => {
 
@@ -123,9 +87,9 @@ const App = () => {
 
       const message = `"${blog.title}" has been updated`
       showMessage({ message: message, error: false })
-      
+
     } catch (error) {
-      const message = error.response?.data?.error || `error updating blog`
+      const message = error.response?.data?.error || 'error updating blog'
       showMessage({ message, error: true })
       console.error(error.message)
     }
@@ -137,18 +101,18 @@ const App = () => {
 
     try {
       const response = await blogService.delete(blog.id)
-      
+
       if (response.status !== 204) {
         const message = `failed to delete blog: "${blog.title}"`
         showMessage({ message, error: true })
         return
-      } 
+      }
 
       setBlogs(blogs.filter(b => b.id !== blog.id).sort((a, b) => b.likes - a.likes))
 
       const message = `blog "${blog.title}" has been deleted`
       showMessage({ message: message, error: false })
-      
+
     } catch (error) {
       const message = error.response?.data?.error || `error deleting blog: "${blog.title}"`
       showMessage({ message, error: true })
@@ -156,45 +120,41 @@ const App = () => {
     }
   }
 
-  const blogForm = () => (
-    <ToggleVisibility 
-    showLabel="Create New Blog" 
-    hideLabel="Cancel"
-    ref={toggleBlogFormRef}>
-      <BlogForm createBlog={createBlog} />
-    </ ToggleVisibility>
-  )
-
   return (
     <>
       { !user
-        ? loginForm()
+        ? <LoginForm message={message} login={login} />
         : (
           <div>
             <h2>Blogs</h2>
             <Notification message={message} />
             <div>{user.name} logged-in&nbsp;
-              <input 
+              <input
                 type="button"
                 value="Log out"
                 onClick={handleLogout}
               />
             </div>
-            {blogForm()}
+            <ToggleVisibility
+              showLabel="Create New Blog"
+              hideLabel="Cancel"
+              ref={toggleBlogFormRef}>
+              <BlogForm createBlog={createBlog} />
+            </ ToggleVisibility>
             <br />
             <div>
               {blogs.map(blog =>
-                <Blog 
-                key={blog.id} 
-                blog={blog} 
-                updateBlog={updateBlog}
-                deleteBlog={deleteBlog}
-                user={user}
+                <Blog
+                  key={blog.id}
+                  blog={blog}
+                  updateBlog={updateBlog}
+                  deleteBlog={deleteBlog}
+                  user={user}
                 />
               )}
             </div>
           </div>
-      )}
+        )}
     </>
   )
 }
