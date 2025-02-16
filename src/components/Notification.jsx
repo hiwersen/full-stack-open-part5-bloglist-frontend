@@ -4,16 +4,26 @@ const Notification = ({ message }) => {
   const color = message.error ? 'red': 'green'
 
   const style = {
-    backgroundColor: 'light-gray',
+    position: 'fixed',
+    top: '10%',
+    left: '50%',
+    transform: 'translate(-50%, -0%)',
+    minWidth: 360,
+    maxWidth: 720,
+    width: '100%',
+    backgroundColor: 'lightGray',
+    opacity: 0.9,
     borderRadius: 2,
     border: `solid 2px ${color}`,
     padding: '1em',
     color,
+    textAlign: 'center',
+    zIndex: 99
   }
 
   return (
-    <div>
-      <p style={style} >{message.message}</p>
+    <div style={style}>
+      <p>{message.message}</p>
     </div>
   )
 }

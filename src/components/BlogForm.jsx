@@ -19,12 +19,19 @@ const BlogForm = ({ createBlog }) => {
     setUrl('')
   }
 
+  const style = {
+    width: '100%',
+    marginBottom: 8,
+    padding: '2px 4px',
+    textAlign: 'center'
+  }
+
   return (
     <div>
-      <h3>Create New Blog</h3>
+      <h2 style={style}>Create New Blog</h2>
       <form onSubmit={handleCreateBlog}>
         <div>
-          <label htmlFor="title">Title:&nbsp;
+          <label htmlFor="title">Title:
             <input
               id="title"
               name="title"
@@ -35,7 +42,7 @@ const BlogForm = ({ createBlog }) => {
           </label>
         </div>
         <div>
-          <label htmlFor="author">Author:&nbsp;
+          <label htmlFor="author">Author:
             <input
               id="author"
               name="author"
@@ -46,7 +53,7 @@ const BlogForm = ({ createBlog }) => {
           </label>
         </div>
         <div>
-          <label htmlFor="url">Url:&nbsp;
+          <label htmlFor="url">Url:
             <input
               id="url"
               name="url"
@@ -56,7 +63,7 @@ const BlogForm = ({ createBlog }) => {
             />
           </label>
         </div>
-        <input type="submit" value="Create" />
+        <button type="submit" >Create</button>
       </form>
     </div>
   )
