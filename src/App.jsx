@@ -2,10 +2,12 @@ import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import userService from './services/user'
 import Notification from './components/Notification'
-import LoginForm from './components/LoginForm'
+import AuthForm from './components/AuthForm'
 import ToggleVisibility from './components/ToggleVisibility'
 import BlogForm from './components/BlogForm'
+import ToggleComponent from './components/ToggleComponent'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -36,6 +38,21 @@ const App = () => {
     }, 5000)
   }
 
+  const signup = async userToSignup => {
+
+    try {
+      const user = await userService.post(userToSignup)
+
+      if (user) {
+        login({ username: userToSignup.username, password: userToSignup.password })
+      }
+
+    } catch (error) {
+      const message = error.response.data.error || error.message
+      showMessage({ message, error: true })
+    }
+  }
+
   const login = async userToLogin => {
 
     try {
@@ -43,9 +60,6 @@ const App = () => {
       window.localStorage.setItem('user', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
-
-      // const message = `User ${user.name} logged in`
-      // showMessage({ message: message, error: false })
 
     } catch (error) {
       const message = error.response.data.error || error.message
@@ -57,9 +71,6 @@ const App = () => {
     window.localStorage.removeItem('user')
     blogService.setToken(null)
     setUser(null)
-
-    // const message = `User ${user.name} logged out`
-    // showMessage({ message: message, error: false })
   }
 
   const createBlog = async blogToCreate => {
@@ -120,16 +131,40 @@ const App = () => {
     }
   }
 
+  const flex = {
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  }
+
+  const authStyle = {
+    width: 328,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -75%)',
+    transformOrigin: 'top',
+  }
+
   return (
-    <>
+    <div>
+      <Notification message={message} />
       { !user
-        ? <LoginForm message={message} login={login} />
+        ? <section style={authStyle}>
+          <ToggleComponent
+            showLabel="Sign Up"
+            hideLabel="Log In">
+            <AuthForm key="login" type="Log In" auth={login} />
+            <AuthForm key="signup" type="Sign Up" auth={signup} />
+          </ToggleComponent>
+        </section>
         : (
-          <div>
-            <h2>Blogs</h2>
-            <Notification message={message} />
-            <div>{user.name} logged-in&nbsp;
+          <section style={flex}>
+            <h1>Blogs</h1>
+            <div style={{ fontSize: 14, width: '100%', textAlign: 'right', paddingRight: 8 }}>{user.name} logged-in
               <input
+                style={{ fontSize: 14, marginLeft: 14, width: 82, padding: '2px 4px' }}
                 type="button"
                 value="Log out"
                 onClick={handleLogout}
@@ -141,8 +176,7 @@ const App = () => {
               ref={toggleBlogFormRef}>
               <BlogForm createBlog={createBlog} />
             </ ToggleVisibility>
-            <br />
-            <div>
+            <div style={{ width: '100%' }}>
               {blogs.map(blog =>
                 <Blog
                   key={blog.id}
@@ -153,9 +187,9 @@ const App = () => {
                 />
               )}
             </div>
-          </div>
+          </section>
         )}
-    </>
+    </div>
   )
 }
 
