@@ -5,20 +5,15 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
   const [viewDetails, setViewDetails] = useState(false)
 
   const style = {
-    backgroundColor: '#ffffff8b',
-    padding: '24px 14px 12px',
-    border: 'solid 0.5px lightgray',
+    padding: 8,
+    paddingTop: 16,
+    border: 'solid 1px lightgray',
     borderRadius: 4,
     marginBottom: 12,
-    boxShadow: '0 8px 12px #d1d1d1'
+    minWidth: 320
   }
 
-  const flex = {
-    display: 'flex',
-    justifyContent: 'space-between'
-  }
-
-  const toggleViewBtn = () => (
+  const toggleView = () => (
     <input
       type="button"
       value={viewDetails ? 'hide' : 'view' }
@@ -41,7 +36,9 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
 
   const deleteBtn = () => {
     const style = {
-      display: blog.user?.username === user?.username ? '' : 'none',
+      display: blog.user.username === user.username ? '' : 'none',
+      border: '0.5px solid lightGray',
+      borderRadius: 4
     }
 
     return (
@@ -55,14 +52,14 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
   }
 
   return (
-    <div style={style} className="blog">
-      <div style={{ ...flex, fontSize: 18 }}><span>{blog.title}, {blog.author}</span>{toggleViewBtn()}
+    <div style={style}>
+      <div>{blog.title}, {blog.author}&nbsp;{toggleView()}
       </div>
-      <div style={{ display: viewDetails ? '' : 'none', fontSize: 14 }}>
-        <div><a href='#' target='_blank'>{blog.url}</a></div>
-        <div style={flex}>Likes {blog.likes}&nbsp;{likeBtn()}</div>
-        <div>{blog.user?.name}</div>
-        <div style={{ textAlign: 'right' }}>{deleteBtn()}</div>
+      <div style={{ display: viewDetails ? '' : 'none' }}>
+        <div>{blog.url}</div>
+        <div>Likes {blog.likes}&nbsp;{likeBtn()}</div>
+        <div>{blog.user.name}</div>
+        <div>{deleteBtn()}</div>
       </div>
     </div>
   )}
