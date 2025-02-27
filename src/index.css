@@ -24,10 +24,22 @@ body {
     border-width: 0.5px;
   }
 
+  input[type=button] {
+    cursor: pointer;
+  }
+
+  input[type=button]:hover {
+    background-color: rgb(176, 191, 204);
+  }
+
   button:hover {
     cursor: pointer;
     background-color: rgb(14, 126, 218);
     color: white;
+  }
+
+  .blog:hover {
+    background-color: rgb(215, 228, 240);
   }
 
   .blog input {

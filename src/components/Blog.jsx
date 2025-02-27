@@ -5,7 +5,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
     const [viewDetails, setViewDetails] = useState(false)
 
     const style = {
-        backgroundColor: '#ffffff8b',
+        // backgroundColor: '#ffffff8b',
         padding: '24px 14px 12px',
         border: 'solid 0.5px lightgray',
         borderRadius: 4,
@@ -55,7 +55,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
     }
 
     return (
-        <div style={style} className="blog">
+        <div className="blog" style={style}>
             <div className='content-main' style={{ ...flex, fontSize: 18 }}><span>{blog.title}, {blog.author}</span>{toggleViewBtn()}
             </div>
             <div className='content-details' style={{ display: viewDetails ? '' : 'none', fontSize: 14 }}>
