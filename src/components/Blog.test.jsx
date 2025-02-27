@@ -10,10 +10,11 @@ describe('<Blog />', () => {
         likes: 15
     }
 
-    let container
+    let container, mockUpdateBlog
 
     beforeEach(() => {
-        container = render(<Blog blog={blog} />).container
+        mockUpdateBlog = vi.fn()
+        container = render(<Blog blog={blog} updateBlog={mockUpdateBlog} />).container
         // screen.debug()
     })
 
@@ -36,5 +37,13 @@ describe('<Blog />', () => {
         expect(details).toBeVisible()
         expect(details).toHaveTextContent(blog.url)
         expect(details).toHaveTextContent(blog.likes.toString())
+    })
+
+    test('updateBlog is called twice if the "Like" btn is clicked twice', async () => {
+        const user = userEvent.setup()
+        const likeBtn = screen.getByText('Like')
+        await user.click(likeBtn)
+        await user.click(likeBtn)
+        expect(mockUpdateBlog.mock.calls).toHaveLength(2)
     })
 })
