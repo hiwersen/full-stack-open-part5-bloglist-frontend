@@ -158,7 +158,6 @@ const App = () => {
                             hideByDefault="Log In">
                             <AuthForm key="login" type="Log In" auth={login} />
                             <AuthForm key="signup" type="Sign Up" auth={signup} />
-                            <p>Hello World</p>
                         </ToggleComponents>
                     </section>
                 )

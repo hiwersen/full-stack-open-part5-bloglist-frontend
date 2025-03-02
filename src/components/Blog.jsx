@@ -21,7 +21,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
     const toggleViewBtn = () => (
         <input
             type="button"
-            value={viewDetails ? 'hide' : 'view' }
+            value={viewDetails ? 'Hide' : 'View' }
             onClick={() => setViewDetails(!viewDetails)}
         />
     )
@@ -55,12 +55,12 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
     }
 
     return (
-        <div className="blog" style={style}>
+        <div data-testid='blog' className='blog' style={style}>
             <div className='content-main' style={{ ...flex, fontSize: 18 }}><span>{blog.title}, {blog.author}</span>{toggleViewBtn()}
             </div>
             <div className='content-details' style={{ display: viewDetails ? '' : 'none', fontSize: 14 }}>
                 <div><a href='#' target='_blank'>{blog.url}</a></div>
-                <div style={flex}>Likes {blog.likes}&nbsp;{likeBtn()}</div>
+                <div data-testid='likes' style={flex}>Likes <span data-testid='likes-count'>{blog.likes}</span>&nbsp;{likeBtn()}</div>
                 <div>{blog.user?.name}</div>
                 <div style={{ textAlign: 'right' }}>{deleteBtn()}</div>
             </div>

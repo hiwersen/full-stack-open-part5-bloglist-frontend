@@ -20,6 +20,7 @@ describe('<Blog />', () => {
 
     test('.content-main renders by default', () => {
         const main = container.querySelector('.content-main')
+        expect(main).toBeVisible()
         expect(main).toHaveTextContent(`${blog.title}, ${blog.author}`)
     })
 
@@ -28,9 +29,9 @@ describe('<Blog />', () => {
         expect(details).not.toBeVisible()
     })
 
-    test('.content-details are displayed after clicking "view" btn', async () => {
+    test('.content-details are displayed after clicking "View" btn', async () => {
         const user = userEvent.setup()
-        const viewBtn = screen.getByText('view')
+        const viewBtn = screen.getByText('View')
         await user.click(viewBtn)
 
         const details = container.querySelector('.content-details')

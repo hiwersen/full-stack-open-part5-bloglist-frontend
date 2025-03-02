@@ -37,6 +37,7 @@ const AuthForm = ({ type, auth }) => {
                     <label htmlFor="username">Username:
                         <input
                             id="username"
+                            data-testid="username"
                             name="username"
                             type="text"
                             value={username}
@@ -48,6 +49,7 @@ const AuthForm = ({ type, auth }) => {
                     <label htmlFor="password">Password:
                         <input
                             id="password"
+                            data-testid="password"
                             name="password"
                             type="password"
                             value={password}
